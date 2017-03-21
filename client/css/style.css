@@ -1,0 +1,39 @@
+/* Custom Stylesheet */
+
+
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+.icon-block {
+  padding: 0 15px;
+}
+
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+.modal {
+  width: 50%;
+}
+
+.modal.modal-fixed-footer {
+  height: 100%;
+}
+
+img {
+  border: 0;
+  width: 114px;
+}
+
+nav {
+  background-color: rgb(0, 203, 236)
+}
+
+#map {
+  width: 100%;
+  height: 400px;
+}
