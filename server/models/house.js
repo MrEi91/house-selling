@@ -18,7 +18,9 @@ let houseSchema = new Schema({
   cost: Number,
   sold: Boolean,
   slug: String,
-  img: String
+  img: String,
+  latitude: Number,
+  longitude: Number
 }, {
   timestamps: true
 })
