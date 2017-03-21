@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>House Selling</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="js/axios.min.js"></script>
+
+  </head>
+
+  <body>
+    <div class="navbar-fixed">
+      <nav>
+        <div class="container">
+          <div class="nav-wrapper">
+            <a href="#!" class="brand-logo"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRwueSaGAfgs0OpxVlDXZbWxx9-dMYJfj5YG-NatJGTzmXn4BqhKQ" alt=""></a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div id="app">
+      <!-- BUTTON TRIGER MODAL EDIT -->
+      <div class="fixed-action-btn">
+        <a href="#add" class="modal-trigger btn-floating btn-large red tooltipped" data-position="left" data-delay="50" data-tooltip="Sell House!">
+          <i class="large material-icons">mode_edit</i>
+        </a>
+      </div>
+      <!-- END BUTTON TRIGER MODAL EDIT -->
+      <h4 class="center">Real Estate|Ei</h4>
+      <!-- CONTAINER -->
+      <div class="container">
+        <div id="map"></div>
+        <div class="row">
+          <div v-for="item in houseItem" class="card horizontal">
+            <div class="card-image">
+              <img :src="item.img">
+            </div>
+            <div class="card-stacked">
+              <div class="card-content">
+                <h5>{{ item.title }}</h5>
+                <p>Address : {{ item.address }}</p>
+                <p>Cost : {{ item.cost }}</p>
+                <p>Square feet : {{ item.square_feet }}</p>
+                <p>Bedrooms : {{item.num_bedrooms}}</p>
+                <p>Bathrooms : {{item.num_baths}}</p>
+                <p>Sold : {{item.sold}}</p>
+                <p>Slug : {{item.slug}}</p>
+                <!-- <p>{{ item.latitude }}</p>
+                <p>{{ item.longitude }}</p> -->
+              </div>
+              <div class="card-action">
+                <a class="modal-trigger waves-effect waves-light orange btn" href="#edit" @click="getHouse(item.slug)">Edit</a>
+                <a class="modal-trigger waves-effect waves-light blue btn" href="#delete" @click="getHouse(item.slug)">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL ADD RPOPERTY -->
+        <div id="add" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="text" v-model="add.title">
+                  <label for="title">Title</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="text" v-model="add.address">
+                  <label for="address">Address</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" v-model="add.square_feet">
+                  <label for="square_feet">Square feet</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" v-model="add.num_bedrooms">
+                  <label for="num_bedrooms">Bedrooms</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" v-model="add.num_baths">
+                  <label for="num_baths">Bathrooms</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" v-model="add.num_floor">
+                  <label for="num_floor">Floor</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" v-model="add.cost">
+                  <label for="cost">Cost</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="text" v-model="add.sold">
+                  <label for="status">Status</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="text" v-model="add.img">
+                  <label for="img">Photo</label>
+                </div>
+                <div class="input-field col s6">
+                  <input type="number" v-model="add.latitude">
+                  <label for="latitude">Latitude</label>
+                </div>
+                <div class="input-field col s6">
+                  <input type="number" v-model="add.longitude">
+                  <label for="longitude">Longitude</label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <a href="#" @click="addHouse()" class="modal-action modal-close waves-effect waves-green btn">Submit</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          </div>
+        </div>
+        <!-- MODAL ADD RPOPERTY -->
+
+        <!-- MODAL EDIT -->
+        <div id="edit" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="text" placeholder="" v-model="get.title">
+                  <label for="title">Title</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="text" placeholder="" v-model="get.address">
+                  <label for="address">Address</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" placeholder="" v-model="get.square_feet">
+                  <label for="square_feet">Square feet</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" placeholder="" v-model="get.num_bedrooms">
+                  <label for="num_bedrooms">Bedrooms</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" placeholder="" v-model="get.num_baths">
+                  <label for="num_baths">Bathrooms</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" placeholder="" v-model="get.num_floor">
+                  <label for="num_floor">Floor</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="number" placeholder="" v-model="get.cost">
+                  <label for="cost">Cost</label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="text" placeholder="" v-model="get.status">
+                  <label for="status">Status</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="text" placeholder="" v-model="get.img">
+                  <label for="img">Photo</label>
+                </div>
+                <div class="input-field col s6">
+                  <input type="number" placeholder="" v-model="get.latitude">
+                  <label for="latitude">Latitude</label>
+                </div>
+                <div class="input-field col s6">
+                  <input type="number" placeholder="" v-model="get.longitude">
+                  <label for="longitude">Longitude</label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <a href="#" @click="editHouse(get.slug)" class="modal-action modal-close waves-effect waves-green btn">Submit</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          </div>
+        </div>
+        <!-- END MODAL EDIT -->
+
+        <!-- DELETE -->
+        <div id="delete" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <h2>Are you sure to delete this house?</h2>
+          </div>
+          <div class="modal-footer">
+            <a href="#" @click="deleteHouse(get.slug)" class="modal-action modal-close waves-effect waves-green btn red">Delete</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          </div>
+        </div>
+        <!-- END DELETE -->
+      </div>
+      <!-- END CONTAINER -->
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHWg_iFhssCmY6QQv2lnjst2QGGzNrxF4"></script>
+    <script src="js/gmaps.js"></script>
+    <script>
+    </script>
+    <!--  Scripts-->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/script.js"></script>
+    <script type="text/javascript">
+      // TRIGER FOR MODAL
+      $(document).ready(function() {
+        $('.modal').modal();
+        var map = new GMaps({
+          div: '#map',
+          lat: -12.043333,
+          lng: -77.028333
+        });
+      });
+    </script>
+  </body>
+
+</html>
