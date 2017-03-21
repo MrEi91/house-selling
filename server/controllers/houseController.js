@@ -19,7 +19,9 @@ methods.getHouses = (req, res, next) => {
 }
 
 methods.getOneHouse = (req, res, next) => {
-  house.findOne(req.params.slug)
+  house.findOne({
+    slug: req.params.slug
+  })
     .then((house) => {
       res.send(house)
     })
